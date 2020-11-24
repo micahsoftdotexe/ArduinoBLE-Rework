@@ -21,6 +21,7 @@
 #define _HCI_H_
 
 // #include <Arduino.h>
+#include "Stream.h"
 
 class HCIClass {
 public:

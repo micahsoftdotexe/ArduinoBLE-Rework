@@ -21,8 +21,11 @@
 #include "utility/BLEUuid.h"
 #include "utility/HCI.h"
 #include "WString.h"
+#include "Stream.h"
 #include "remote/BLERemoteDevice.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include "Common.h"
 
 #include "BLEDevice.h"
 

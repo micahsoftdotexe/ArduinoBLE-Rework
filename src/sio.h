@@ -13,9 +13,8 @@ class sio{
     public:
         sio(){
             uart_init();
-            arduino_clock_fix();
         }
         void GetMsg(const char * message, unsigned int buf_size);
         void Println(const char * message);
-        Print(const char *message);
-}
+        void Print(const char *message);
+};

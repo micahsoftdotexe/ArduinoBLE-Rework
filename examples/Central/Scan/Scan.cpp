@@ -11,7 +11,7 @@
   This example code is in the micah controlled domain.
 */
 //really cool stuff below:
-// ~/.arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino5/bin/avr-gcc -O3 -B /home/micaht/"College Work"/Microcontroller/atpack/gcc/dev/atmega4809 -I/home/micaht/"College Work"/Microcontroller/atpack/include -I/home/micaht/Arduino/libraries/ArduinoBLE/src -mmcu=atmega4809 Scan.cpp -o scan.elf
+// ~/.arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino5/bin/avr-gcc -O3 -Wall -B /home/logan/Downloads/ATMEGA_pack/gcc/dev/atmega4809 -I/home/logan/Downloads/ATMEGA_pack/include -I/home/logan/Documents/ArduinoBLE-Rework/src -mmcu=atmega4809 Scan.cpp -o scan.elf
 // ~/.arduino15/packages/arduino/tools/avrdude/6.3.0-arduino17/bin/avrdude -C/home/micaht/.arduino15/packages/arduino/tools/avrdude/6.3.0-arduino17/etc/avrdude.conf -v -patmega4809 -cxplainedmini_updi -Pusb -b115200 -e -D -U scan.elf
 #define __AVR_atmega4809__
 
@@ -125,7 +125,7 @@ int main() {
 
       // print the advertised service UUIDs, if present
       if (peripheral.hasAdvertisedServiceUuid()) {
-        serial.print("Service UUIDs: ");
+        serial.Print("Service UUIDs: ");
         for (int i = 0; i < peripheral.advertisedServiceUuidCount(); i++) {
           serial.Print(peripheral.advertisedServiceUuid(i).c_str());
           serial.Print(" ");
@@ -134,10 +134,10 @@ int main() {
       }
 
       // print the RSSI
-      seral.Print("RSSI: ");
+      serial.Print("RSSI: ");
       // println(peripheral.rssi().c_str());
 
-      seral.Println("");
+      serial.Println("");
     }
   }
 
