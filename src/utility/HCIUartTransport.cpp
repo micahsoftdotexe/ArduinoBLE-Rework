@@ -20,6 +20,7 @@
 #if !defined(ARDUINO_ARCH_MBED)
 
 #include "HCIUartTransport.h"
+#include "sio.h"
 
 #if defined(ARDUINO_SAMD_MKRWIFI1010) || defined(ARDUINO_AVR_UNO_WIFI_REV2)
 #define SerialHCI Serial2
@@ -32,8 +33,9 @@
 #else
 #error "Unsupported board selected!"
 #endif
-
+// volatile ms = 0;
 HCIUartTransportClass::HCIUartTransportClass(HardwareSerial& uart, unsigned long baudrate) :
+// HCIUartTransportClass::HCIUartTransportClass(unsigned long baudrate) :
   _uart(&uart),
   _baudrate(baudrate)
 {
@@ -42,10 +44,23 @@ HCIUartTransportClass::HCIUartTransportClass(HardwareSerial& uart, unsigned long
 HCIUartTransportClass::~HCIUartTransportClass()
 {
 }
-
+// int HCIUartTransportClass::countms(){
+//   _delay_ms(1);
+//   ms++;
+//   return ms;
+// }
+// void HCIUartTransportClass::resetms(){
+//   ms = 0;
+// }
 int HCIUartTransportClass::begin()
 {
+  sio::Println("[LOG] Before _uart->begin()");
+  char buf[32];
+  sprintf(buf, "Address: %d", (void*)_uart);
+  sio::Println(buf);
+  sio::Println("[LOG] after printing address");
   _uart->begin(_baudrate);
+  sio::Println("[LOG] After _uart->begin()");
 
   return 1;
 }
@@ -57,7 +72,8 @@ void HCIUartTransportClass::end()
 
 void HCIUartTransportClass::wait(unsigned long timeout)
 {
-  for (unsigned long start = millis(); (millis() - start) < timeout;) {
+  for (unsigned long millis = 0; millis < timeout; millis++) {
+    _delay_ms(1);
     if (available()) {
       break;
     }
@@ -83,7 +99,8 @@ size_t HCIUartTransportClass::write(const uint8_t* data, size_t length)
 {
 #ifdef ARDUINO_AVR_UNO_WIFI_REV2
   // wait while the CTS pin is low
-  while (digitalRead(NINA_CTS) == HIGH);
+  // while (digitalRead(NINA_CTS) == HIGH);
+  while (PORTF_IN & PIN3_bm);
 #endif
 
   size_t result = _uart->write(data, length);

@@ -21,6 +21,7 @@
 #define _BLE_LOCAL_ATTRIBUTE_H_
 
 #include "utility/BLEUuid.h"
+#include <stdint.h>
 
 enum BLEAttributeType {
   BLETypeUnknown        = 0x0000,

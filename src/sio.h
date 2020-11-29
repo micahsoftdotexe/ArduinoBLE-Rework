@@ -8,13 +8,14 @@
 
 class sio{
     private:
-        void uart_init();
-        void arduino_clock_fix();
+        static void uart_init();
+        static void arduino_clock_fix();
     public:
         sio(){
             uart_init();
         }
-        void GetMsg(const char * message, unsigned int buf_size);
-        void Println(const char * message);
-        void Print(const char *message);
+        static void setup();
+        static void GetMsg(char * message, unsigned int buf_size);
+        static void Println(const char * message);
+        static void Print(const char *message);
 };

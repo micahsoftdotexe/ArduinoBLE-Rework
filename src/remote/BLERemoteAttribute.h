@@ -21,7 +21,7 @@
 #define _BLE_REMOTE_ATTRIBUTE_H_
 
 // #include <Arduino.h>
-
+#include "WString.h"
 class BLERemoteAttribute
 {
 public:

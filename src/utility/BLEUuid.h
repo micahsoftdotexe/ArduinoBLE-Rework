@@ -21,6 +21,7 @@
 #define _BLE_UUID_H_
 
 // #include <Arduino.h>
+#include <stdint.h>
 
 #define BLE_UUID_MAX_LENGTH 16
 

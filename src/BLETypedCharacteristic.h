@@ -21,6 +21,7 @@
 #define _BLE_TYPED_CHARACTERISTIC_H_
 
 #include "BLECharacteristic.h"
+#include "WString.h"
 
 template<typename T> class BLETypedCharacteristic : public BLECharacteristic
 {

@@ -21,6 +21,9 @@
 #define _HCI_TRANSPORT_INTERFACE_H_
 
 //#include <Arduino.h>
+// #include "Common.h"
+#include <stdint.h>
+#include <stddef.h>
 
 class HCITransportInterface {
 public:

@@ -142,7 +142,14 @@ bool ATTClass::disconnect(uint8_t peerBdaddrType, uint8_t peerBdaddr[6])
 
   HCI.disconnect(connHandle);
 
-  for (unsigned long start = millis(); (millis() - start) < _timeout;) {
+  uint16_t _loopCounter=0;
+  uint16_t _msCounter=0;
+  for (; _msCounter < _timeout;) {
+    _loopCounter++;
+    if (_loopCounter == 64) {  // 250 cycles - 1/16000000 -> 6.25e-08 * 50 = 3.1249999999999997e ////***//// ->     1/((1/16000000) * 250 * 1000) = 64
+      _loopCounter == 0;
+      _msCounter++;
+    }
     HCI.poll();
 
     if (!connected(connHandle)) {

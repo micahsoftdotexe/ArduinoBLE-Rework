@@ -20,11 +20,21 @@
 #ifndef _HCI_UART_TRANSPORT_H_
 #define _HCI_UART_TRANSPORT_H_
 
+#include "UART.h"
 #include "HCITransport.h"
+#include <avr/io.h>
+#include <util/delay.h>
+#ifdef IOM4809
+#include <avr/iom4809.h>
+#endif
 
-class HCIUartTransportClass : public HCITransportInterface {
+class HCIUartTransportClass : public HCITransportInterface 
+{
 public:
   HCIUartTransportClass(HardwareSerial& uart, unsigned long baudrate);
+  // virtual int countms();
+  // virtual void resetms();
+  // HCIUartTransportClass(unsigned long baudrate);
   virtual ~HCIUartTransportClass();
 
   virtual int begin();

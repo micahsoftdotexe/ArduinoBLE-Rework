@@ -24,6 +24,12 @@
 #include "utility/L2CAPSignaling.h"
 
 #include "BLELocalDevice.h"
+#include <avr/io.h>
+#include <util/delay.h>
+#ifdef IOM4809
+#include <avr/iom4809.h>
+#endif
+#include "sio.h"
 
 #if defined(ARDUINO_PORTENTA_H7_M4) || defined(ARDUINO_PORTENTA_H7_M7)
 #ifndef BT_REG_ON
@@ -41,19 +47,27 @@ BLELocalDevice::~BLELocalDevice()
 
 int BLELocalDevice::begin()
 {
+  sio::Println("It has begun!!!!");
 #if defined(ARDUINO_SAMD_MKRWIFI1010) || defined(ARDUINO_AVR_UNO_WIFI_REV2) || defined(ARDUINO_SAMD_NANO_33_IOT)
   // reset the NINA in BLE mode
-  pinMode(SPIWIFI_SS, OUTPUT);
-  pinMode(NINA_RESETN, OUTPUT);
+  // pinMode(SPIWIFI_SS, OUTPUT);
+  PORTF.DIRSET = PIN2_bm;
+  // pinMode(NINA_RESETN, OUTPUT);
+  PORTA.DIRSET = PIN7_bm;
   
-  digitalWrite(SPIWIFI_SS, LOW);
+  // digitalWrite(SPIWIFI_SS, LOW);
+  PORTF.OUTCLR = PIN2_bm;
 #endif
 
 #if defined(ARDUINO_SAMD_MKRWIFI1010) || defined(ARDUINO_AVR_UNO_WIFI_REV2)
-  digitalWrite(NINA_RESETN, HIGH);
-  delay(100);
-  digitalWrite(NINA_RESETN, LOW);
-  delay(750);
+  // digitalWrite(NINA_RESETN, HIGH);
+  PORTA.OUTSET = PIN7_bm;
+  // delay(100);
+  _delay_ms(100);
+  // digitalWrite(NINA_RESETN, LOW);
+  PORTA.OUTCLR = PIN7_bm;
+  // delay(750);
+  _delay_ms(750);
 #elif defined(ARDUINO_SAMD_NANO_33_IOT)
   // inverted reset
   digitalWrite(NINA_RESETN, LOW);
@@ -69,28 +83,41 @@ int BLELocalDevice::begin()
 
 #ifdef ARDUINO_AVR_UNO_WIFI_REV2
   // set SS HIGH
-  digitalWrite(SPIWIFI_SS, HIGH);
+  // digitalWrite(SPIWIFI_SS, HIGH);
+  PORTF.OUTSET = PIN2_bm;
 
   // set RTS HIGH
-  pinMode(NINA_RTS, OUTPUT);
-  digitalWrite(NINA_RTS, HIGH);
+  // pinMode(NINA_RTS, OUTPUT);
+  PORTA.DIRSET = PIN6_bm;
+  // digitalWrite(NINA_RTS, HIGH);
+  PORTA.OUTSET = PIN6_bm;
 
   // set CTS as input
-  pinMode(NINA_CTS, INPUT);
+  // pinMode(NINA_CTS, INPUT);
+  PORTF.DIRCLR = PIN3_bm;
 #endif
 
+  sio::Println("[LOG] Before HCI.begin()");
   if (!HCI.begin()) {
+    sio::Println("[LOG] After HCI.begin() --- end()");
     end();
     return 0;
   }
+  sio::Println("[LOG] After HCI.begin()");
 
-  delay(100);
+  _delay_ms(100);
 
-  if (HCI.reset() != 0) {
+  uint16_t val = HCI.reset();
+  if (val != 0) {
+    char buf[32];
+    sprintf(buf, "[LOG] val: %d", val);
+    sio::Println(buf);
+    sio::Println("[LOG] After HCI.reset() --- end()");
     end();
 
     return 0;
   }
+  sio::Println("[LOG] After HCI.reset()");
 
   uint8_t hciVer;
   uint16_t hciRev;
@@ -117,6 +144,7 @@ int BLELocalDevice::begin()
   }
 
   GATT.begin();
+  sio::Println("[LOG] After GATT.begin()");
 
   return 1;
 }
@@ -129,7 +157,8 @@ void BLELocalDevice::end()
 
 #if defined(ARDUINO_SAMD_MKRWIFI1010) || defined(ARDUINO_AVR_UNO_WIFI_REV2)
   // disable the NINA
-  digitalWrite(NINA_RESETN, HIGH);
+  // digitalWrite(NINA_RESETN, HIGH);
+  PORTA.OUTSET = PIN7_bm;
 #elif defined(ARDUINO_SAMD_NANO_33_IOT)
   // disable the NINA
   digitalWrite(NINA_RESETN, LOW);

@@ -30,24 +30,38 @@
 // protected method to read stream with timeout
 int Stream::timedRead()
 {
+  uint16_t _loopCounter=0;
+  uint16_t _msCounter=0;
+
   int c;
-  _startMillis = millis();
   do {
     c = read();
+    _loopCounter++;
+    if (_loopCounter == 320) {  // 50 cycles - 1/16000000 -> 6.25e-08 * 50 = 3.1249999999999997e ////***//// ->     1/((1/16000000) * 50 * 1000) = 320
+      _loopCounter == 0;
+      _msCounter++;
+    }
     if (c >= 0) return c;
-  } while(millis() - _startMillis < _timeout);
+  } while(_msCounter < _timeout);
   return -1;     // -1 indicates timeout
 }
 
 // protected method to peek stream with timeout
 int Stream::timedPeek()
 {
+  uint16_t _loopCounter=0;
+  uint16_t _msCounter=0;
+
   int c;
-  _startMillis = millis();
   do {
     c = peek();
+    _loopCounter++;
+    if (_loopCounter == 320) {  // 50 cycles - 1/16000000 -> 6.25e-08 * 50 = 3.1249999999999997e ////***//// ->     1/((1/16000000) * 50 * 1000) = 320
+      _loopCounter == 0;
+      _msCounter++;
+    }
     if (c >= 0) return c;
-  } while(millis() - _startMillis < _timeout);
+  } while(_msCounter < _timeout);
   return -1;     // -1 indicates timeout
 }
 

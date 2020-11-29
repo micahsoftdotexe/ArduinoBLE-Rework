@@ -22,6 +22,7 @@
 #include "HCITransport.h"
 #include "L2CAPSignaling.h"
 
+#include "sio.h"
 #include "HCI.h"
 
 #define HCI_COMMAND_PKT 0x01
@@ -86,7 +87,7 @@ HCIClass::~HCIClass()
 int HCIClass::begin()
 {
   _recvIndex = 0;
-
+  sio::Println("[LOG] Before HCITransport.begin()");
   return HCITransport.begin();
 }
 
@@ -103,7 +104,8 @@ void HCIClass::poll()
 void HCIClass::poll(unsigned long timeout)
 {
 #ifdef ARDUINO_AVR_UNO_WIFI_REV2
-  digitalWrite(NINA_RTS, LOW);
+  // digitalWrite(NINA_RTS, LOW);
+  PORTA.DIRCLR = PIN6_bm;
 #endif
 
   if (timeout) {
@@ -121,7 +123,8 @@ void HCIClass::poll(unsigned long timeout)
           dumpPkt("HCI ACLDATA RX <- ", _recvIndex, _recvBuffer);
         }
 #ifdef ARDUINO_AVR_UNO_WIFI_REV2
-        digitalWrite(NINA_RTS, HIGH);
+        // digitalWrite(NINA_RTS, HIGH);
+        PORTA.OUTSET = PIN6_bm;
 #endif
         int pktLen = _recvIndex - 1;
         _recvIndex = 0;
@@ -129,7 +132,8 @@ void HCIClass::poll(unsigned long timeout)
         handleAclDataPkt(pktLen, &_recvBuffer[1]);
 
 #ifdef ARDUINO_AVR_UNO_WIFI_REV2
-        digitalWrite(NINA_RTS, LOW);  
+        // digitalWrite(NINA_RTS, LOW);  
+        PORTA.OUTCLR = PIN6_bm;
 #endif
       }
     } else if (_recvBuffer[0] == HCI_EVENT_PKT) {
@@ -138,7 +142,8 @@ void HCIClass::poll(unsigned long timeout)
           dumpPkt("HCI EVENT RX <- ", _recvIndex, _recvBuffer);
         }
 #ifdef ARDUINO_AVR_UNO_WIFI_REV2
-        digitalWrite(NINA_RTS, HIGH);
+        // digitalWrite(NINA_RTS, HIGH);
+        PORTA.OUTSET = PIN6_bm;
 #endif
         // received full event
         int pktLen = _recvIndex - 1;
@@ -147,7 +152,8 @@ void HCIClass::poll(unsigned long timeout)
         handleEventPkt(pktLen, &_recvBuffer[1]);
 
 #ifdef ARDUINO_AVR_UNO_WIFI_REV2
-        digitalWrite(NINA_RTS, LOW);
+        // digitalWrite(NINA_RTS, LOW);
+        PORTA.OUTCLR = PIN6_bm;
 #endif
       }
     } else {
@@ -160,12 +166,14 @@ void HCIClass::poll(unsigned long timeout)
   }
 
 #ifdef ARDUINO_AVR_UNO_WIFI_REV2
-  digitalWrite(NINA_RTS, HIGH);
+  // digitalWrite(NINA_RTS, HIGH);
+  PORTA.OUTSET = PIN6_bm;
 #endif
 }
 
 int HCIClass::reset()
 {
+  sio::Println("[LOG] Before sendCommand()");
   return sendCommand(OGF_HOST_CTL << 10 | OCF_RESET);
 }
 
@@ -482,9 +490,22 @@ int HCIClass::sendCommand(uint16_t opcode, uint8_t plen, void* parameters)
   _cmdCompleteOpcode = 0xffff;
   _cmdCompleteStatus = -1;
 
-  for (unsigned long start = millis(); _cmdCompleteOpcode != opcode && millis() < (start + 1000);) {
+  uint16_t _loopCounter=0;
+  uint16_t _msCounter=0;
+  sio::Println("[LOG] Before sendCommand() loop");
+  while (_cmdCompleteOpcode != opcode && _msCounter < (1000 /4)) {
+    _msCounter++;
+    // if (_loopCounter == 64) {  // 50 cycles - 1/16000000 -> 6.25e-08 * 50 = 3.1249999999999997e ////***//// ->     1/((1/16000000) * 250 * 1000) = 64
+    
+    //   _loopCounter == 0;
+    //   _msCounter++;
+    //   char buf[32];
+    //   sprintf(buf, "msCounter: %d", _msCounter);
+    //   sio::Println(buf);
+    // }
     poll();
   }
+  sio::Println("[LOG] After sendCommand() loop");
 
   return _cmdCompleteStatus;
 }

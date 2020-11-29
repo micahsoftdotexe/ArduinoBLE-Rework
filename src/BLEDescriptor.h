@@ -21,6 +21,7 @@
 #define _BLE_DESCRIPTOR_H_
 
 #include <stdint.h>
+#include "Common.h"
 
 class BLELocalDescriptor;
 class BLERemoteDescriptor;

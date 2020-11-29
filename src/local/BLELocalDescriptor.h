@@ -21,7 +21,8 @@
 #define _BLE_LOCAL_DESCRIPTOR_H_
 
 #include <stdint.h>
-
+#include "Common.h"
+#include "WString.h"
 #include "BLELocalAttribute.h"
 
 class BLELocalDescriptor : public BLELocalAttribute {

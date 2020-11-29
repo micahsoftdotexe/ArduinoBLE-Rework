@@ -87,17 +87,24 @@
 int main() {
   // arduino_clock_fix();
   // uart_init();
-  sio serial = sio();
+  // sio serial = sio();
+  sio::setup();
   
+  sio::Println("Starting up!!!!");
+  sio::Println("Starting up2!!!!");
+  sio::Println("Starting up3!!!!");
+
+  CPU_CCP = CCP_IOREG_gc;
+  CPUINT_CTRLA |= CPUINT_IVSEL_bm;
 
   // begin initialization
   if (!BLE.begin()) {
-    serial.Println("starting BLE failed!");
+    sio::Println("starting BLE failed!");
 
     while (1);
   }
 
-  serial.Println("BLE Central scan");
+  sio::Println("BLE Central scan");
 
   // start scanning for peripheral
   BLE.scan();
@@ -110,34 +117,34 @@ int main() {
 
     if (peripheral) {
       // discovered a peripheral
-      serial.Println("Discovered a peripheral");
-      serial.Println("-----------------------");
+      sio::Println("Discovered a peripheral");
+      sio::Println("-----------------------");
 
       // print address
-      serial.Print("Address: ");
-      serial.Println(peripheral.address().c_str());
+      sio::Print("Address: ");
+      sio::Println(peripheral.address().c_str());
 
       // print the local name, if present
       if (peripheral.hasLocalName()) {
-        serial.Print("Local Name: ");
-        serial.Println(peripheral.localName().c_str());
+        sio::Print("Local Name: ");
+        sio::Println(peripheral.localName().c_str());
       }
 
       // print the advertised service UUIDs, if present
       if (peripheral.hasAdvertisedServiceUuid()) {
-        serial.Print("Service UUIDs: ");
+        sio::Print("Service UUIDs: ");
         for (int i = 0; i < peripheral.advertisedServiceUuidCount(); i++) {
-          serial.Print(peripheral.advertisedServiceUuid(i).c_str());
-          serial.Print(" ");
+          sio::Print(peripheral.advertisedServiceUuid(i).c_str());
+          sio::Print(" ");
         }
-        serial.Println("");
+        sio::Println("");
       }
 
       // print the RSSI
-      serial.Print("RSSI: ");
+      sio::Print("RSSI: ");
       // println(peripheral.rssi().c_str());
 
-      serial.Println("");
+      sio::Println("");
     }
   }
 
