@@ -113,6 +113,10 @@ void HCIClass::poll(unsigned long timeout)
   }
 
   while (HCITransport.available()) {
+
+    char buf[32];
+    sprintf(buf, "[LOG] avail: %d", HCITransport.available());
+    sio::Println(buf);
     byte b = HCITransport.read();
 
     _recvBuffer[_recvIndex++] = b;
@@ -471,6 +475,9 @@ void HCIClass::noDebug()
 
 int HCIClass::sendCommand(uint16_t opcode, uint8_t plen, void* parameters)
 {
+  char buf[128];
+  sprintf(buf, "_cmdCompleteOpcode %d, opcode %d", _cmdCompleteOpcode, opcode);
+  sio::Println(buf);
   struct __attribute__ ((packed)) {
     uint8_t pktType;
     uint16_t opcode;
@@ -492,19 +499,30 @@ int HCIClass::sendCommand(uint16_t opcode, uint8_t plen, void* parameters)
 
   uint16_t _loopCounter=0;
   uint16_t _msCounter=0;
+  sprintf(buf, "_cmdCompleteOpcode %d, opcode %d", _cmdCompleteOpcode, opcode);
+  sio::Println(buf);
+  while(!(USART0.STATUS & USART_RXCIF_bm)) {
+    ;
+  }
   sio::Println("[LOG] Before sendCommand() loop");
-  while (_cmdCompleteOpcode != opcode && _msCounter < (1000 /4)) {
+  while (_cmdCompleteOpcode != opcode && _msCounter < (1000)) {
+    _delay_ms(1);
+    if (_msCounter % 100 == 0) {
+      sprintf(buf, "_cmdCompleteOpcode %d, opcode %d", _cmdCompleteOpcode, opcode);
+      sio::Println(buf);
+    }
     _msCounter++;
     // if (_loopCounter == 64) {  // 50 cycles - 1/16000000 -> 6.25e-08 * 50 = 3.1249999999999997e ////***//// ->     1/((1/16000000) * 250 * 1000) = 64
     
     //   _loopCounter == 0;
-    //   _msCounter++;
-    //   char buf[32];
-    //   sprintf(buf, "msCounter: %d", _msCounter);
+      // _msCounter++;
     //   sio::Println(buf);
     // }
     poll();
   }
+  // char buf[128];
+  sprintf(buf, "msCounter: %ul, _cmdCompleteOpcode %d, opcode %d", _msCounter, _cmdCompleteOpcode, opcode);
+  sio::Println(buf);
   sio::Println("[LOG] After sendCommand() loop");
 
   return _cmdCompleteStatus;
@@ -582,6 +600,9 @@ void HCIClass::handleEventPkt(uint8_t /*plen*/, uint8_t pdata[])
     uint8_t plen;
   } *eventHdr = (HCIEventHdr*)pdata;
 
+  char buf[64];
+  sprintf(buf, "[LOG] eventHdr->evt = %d", eventHdr->evt);
+  sio::Println(buf);
   if (eventHdr->evt == EVT_DISCONN_COMPLETE) {
     struct __attribute__ ((packed)) DisconnComplete {
       uint8_t status;
@@ -600,6 +621,7 @@ void HCIClass::handleEventPkt(uint8_t /*plen*/, uint8_t pdata[])
       uint8_t status;
     } *cmdCompleteHeader = (CmdComplete*)&pdata[sizeof(HCIEventHdr)];
 
+    sio::Println("[LOG] Above setting of _cmdCompleteOpcode 1");
     _cmdCompleteOpcode = cmdCompleteHeader->opcode;
     _cmdCompleteStatus = cmdCompleteHeader->status;
     _cmdResponseLen = pdata[1] - sizeof(CmdComplete);
@@ -611,7 +633,7 @@ void HCIClass::handleEventPkt(uint8_t /*plen*/, uint8_t pdata[])
       uint8_t ncmd;
       uint16_t opcode;
     } *cmdStatusHeader = (CmdStatus*)&pdata[sizeof(HCIEventHdr)];
-
+    sio::Println("[LOG] Above setting of _cmdCompleteOpcode 2");
     _cmdCompleteOpcode = cmdStatusHeader->opcode;
     _cmdCompleteStatus = cmdStatusHeader->status;
     _cmdResponseLen = 0;

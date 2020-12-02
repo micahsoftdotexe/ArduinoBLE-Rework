@@ -142,6 +142,12 @@ void UartClass::_poll_tx_data_empty(void)
 
 void UartClass::begin(unsigned long baud, uint16_t config)
 {
+    // baud = 119600;
+    // Check if baud_setting is correct or not....
+
+    char buf[64];
+    sprintf(buf, "[LOG] baud: %ld config 0x%04x", baud, config);
+    sio::Println(buf);
     sio::Println("[LOG] _uart->begin() -- start");
     // Make sure no transmissions are ongoing and USART is disabled in case begin() is called by accident
     // without first calling end()
@@ -187,11 +193,13 @@ void UartClass::begin(unsigned long baud, uint16_t config)
     // digitalWrite(_hwserial_tx_pin, HIGH);
     // pinMode(_hwserial_tx_pin, OUTPUT);
 
-    PORTA.DIRSET = PIN4_bm;
-    PORTA.OUTSET = PIN4_bm;
-
-    PORTA.DIRCLR = PIN5_bm;
     PORTA_PIN5CTRL = PORT_PULLUPEN_bm;
+    PORTA.DIRCLR = PIN5_bm;
+
+    PORTA.OUTSET = PIN4_bm;
+    PORTA.DIRSET = PIN4_bm;
+
+    sei();
     
 
     // Restore SREG content
@@ -201,6 +209,7 @@ void UartClass::begin(unsigned long baud, uint16_t config)
 
 void UartClass::end()
 {
+    sio::Println("[LOG] UartClass::end()");
     // wait for transmission of outgoing data
     flush();
 
@@ -287,6 +296,7 @@ void UartClass::flush()
 
 size_t UartClass::write(uint8_t c)
 {
+    sio::Println("[LOG] Writing");
     _written = true;
 
     // If the buffer and the data register is empty, just write the byte

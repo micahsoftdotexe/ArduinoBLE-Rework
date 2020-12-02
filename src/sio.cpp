@@ -58,7 +58,7 @@ void sio::uart_init() {
     arduino_clock_fix();
     PORTB.DIRSET = PIN4_bm;												
     PORTB.DIRCLR = PIN5_bm;
-    PORTMUX_USARTROUTEA = PORTMUX_USART3_ALT1_gc;   // Make USART3 use alt pins PB[5:4]
+    PORTMUX_USARTROUTEA |= PORTMUX_USART3_ALT1_gc;   // Make USART3 use alt pins PB[5:4]
     USART3_BAUD = 6667;                             // (16000000 * 64) / (16 * 9600) = 6666.66
     USART3_CTRLB = USART_TXEN_bm | USART_RXEN_bm; // Enable transmitter and 8 bit mode
 }

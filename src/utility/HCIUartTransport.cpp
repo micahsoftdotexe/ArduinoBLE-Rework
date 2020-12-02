@@ -103,6 +103,7 @@ size_t HCIUartTransportClass::write(const uint8_t* data, size_t length)
   while (PORTF_IN & PIN3_bm);
 #endif
 
+  sio::Println("[LOG] HCIUartTransportClass::write");
   size_t result = _uart->write(data, length);
 
   _uart->flush();

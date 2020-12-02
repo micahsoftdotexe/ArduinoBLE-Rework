@@ -67,7 +67,9 @@ int BLELocalDevice::begin()
   // digitalWrite(NINA_RESETN, LOW);
   PORTA.OUTCLR = PIN7_bm;
   // delay(750);
-  _delay_ms(750);
+  _delay_ms(250);
+  _delay_ms(250);
+  _delay_ms(250);
 #elif defined(ARDUINO_SAMD_NANO_33_IOT)
   // inverted reset
   digitalWrite(NINA_RESETN, LOW);
@@ -112,7 +114,7 @@ int BLELocalDevice::begin()
     char buf[32];
     sprintf(buf, "[LOG] val: %d", val);
     sio::Println(buf);
-    sio::Println("[LOG] After HCI.reset() --- end()");
+    sio::Println("[LOG] After HCI.reset() --- end()"); 
     end();
 
     return 0;

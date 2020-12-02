@@ -26,6 +26,7 @@
 #include <avr/interrupt.h>
 #include "UART.h"
 #include "UART_private.h"
+#include "sio.h"
 
 // Each UartClass is defined in its own file, sine the linker pulls
 // in the entire file when any element inside is used. --gc-sections can
@@ -40,6 +41,7 @@
 #if defined(HWSERIAL2_RXC_VECTOR)
 ISR(HWSERIAL2_RXC_VECTOR)
 {
+  sio::Println("RX");
   Serial2._rx_complete_irq();
 }
 #else
@@ -49,6 +51,7 @@ ISR(HWSERIAL2_RXC_VECTOR)
 #if defined(HWSERIAL2_DRE_VECTOR)
 ISR(HWSERIAL2_DRE_VECTOR)
 {
+  sio::Println("TX");
   Serial2._tx_data_empty_irq();
 }
 #else
