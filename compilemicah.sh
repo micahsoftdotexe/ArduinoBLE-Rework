@@ -49,4 +49,4 @@ $CC -w -Os -g -flto -fuse-linker-plugin -Wl,--gc-sections -Wl,--section-start=.t
  #   ~/.arduino15/packages/arduino/tools/avrdude/6.3.0-arduino17/bin/avrdude -C/home/micaht/.arduino15/packages/arduino/tools/avrdude/6.3.0-arduino17/etc/avrdude.conf -v -patmega4809 -cxplainedmini_updi -Pusb -b115200 -e -D -U part3.elf
 
  $AVRDUDE -C$AVRDUDE_CONFIG -v -patmega4809 -cxplainedmini_updi -Pusb -b115200 -e -D -U ./examples/Central/Scan/Scan.elf
-minicom uno
+# minicom uno

@@ -54,13 +54,22 @@ HCIUartTransportClass::~HCIUartTransportClass()
 // }
 int HCIUartTransportClass::begin()
 {
-  sio::Println("[LOG] Before _uart->begin()");
-  char buf[32];
-  sprintf(buf, "Address: %d", (void*)_uart);
-  sio::Println(buf);
-  sio::Println("[LOG] after printing address");
+  // sio::Println("[LOG] Before _uart->begin()");
+  // char buf[32];
+  // sprintf(buf, "Address: %d", (void*)_uart);
+  // sio::Println(buf);
+  // sio::Println("[LOG] after printing address");
   _uart->begin(_baudrate);
-  sio::Println("[LOG] After _uart->begin()");
+  // sio::Println("[LOG] After _uart->begin()");
+  // char buf[64];
+  // sprintf(buf, "CTRLA = %04x", USART0_CTRLA);
+  // sio::Println(buf);
+  // sprintf(buf, "CTRLB = %04x", USART0_CTRLB);
+  // sio::Println(buf);
+  // sprintf(buf, "CTRLC = %04x", USART0_CTRLC);
+  // sio::Println(buf);
+  // sprintf(buf, "Baud: %04x", USART0_BAUD);
+  // sio::Println(buf);
 
   return 1;
 }

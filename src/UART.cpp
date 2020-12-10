@@ -158,6 +158,8 @@ void UartClass::begin(unsigned long baud, uint16_t config)
     // Setup port mux
     // PORTMUX.USARTROUTEA |= _uart_mux;
     PORTMUX_USARTROUTEA |= PORTMUX_USART0_ALT1_gc;   // Make USART0 use alt pins PA[5:4]
+    sprintf(buf, "[LOG] Portmux USARTROUTEA: 0x%02x", PORTMUX_USARTROUTEA);
+    sio::Println(buf);
 
     int32_t baud_setting = 0;
 
@@ -174,7 +176,9 @@ void UartClass::begin(unsigned long baud, uint16_t config)
     sio::Println("[LOG] _uart->begin() -- middle");
     int8_t sigrow_val = SIGROW.OSC16ERR5V;
     baud_setting += (baud_setting * sigrow_val) / 1024;
-
+    char buffer[64];
+    // sprintf(buffer,"baud rate: %d", baud_setting);
+    // sio::Println(buffer);
     // assign the baud_setting, a.k.a. BAUD (USART Baud Rate Register)
     USART0.BAUD = (int16_t) baud_setting;
 
@@ -184,7 +188,8 @@ void UartClass::begin(unsigned long baud, uint16_t config)
     // Enable transmitter and receiver
     USART0.CTRLB |= (USART_RXEN_bm | USART_TXEN_bm);
 
-    USART0.CTRLA |= USART_RXCIE_bm;
+    USART0.CTRLA |= (USART_RXCIE_bm);
+    //| USART_DREIE_bm) 
 
     //Set up the rx pin
     // pinMode(_hwserial_rx_pin, INPUT_PULLUP);
@@ -205,6 +210,16 @@ void UartClass::begin(unsigned long baud, uint16_t config)
     // Restore SREG content
     SREG = oldSREG;
     sio::Println("[LOG] _uart->begin() -- end");
+    char buff[64];
+    sprintf(buff,"CTRLA: 0x%02x", USART0_CTRLA);
+    sio::Println(buff);
+    sprintf(buff,"CTRLB: 0x%02x", USART0_CTRLB);
+    sio::Println(buff);
+    sprintf(buff,"CTRLC: 0x%02x", USART0_CTRLC);
+    sio::Println(buff);
+    sprintf(buff,"BAUD: 0x%02x", USART0_BAUD);
+    sio::Println(buff);
+
 }
 
 void UartClass::end()

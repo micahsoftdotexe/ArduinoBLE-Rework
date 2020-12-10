@@ -501,11 +501,11 @@ int HCIClass::sendCommand(uint16_t opcode, uint8_t plen, void* parameters)
   uint16_t _msCounter=0;
   sprintf(buf, "_cmdCompleteOpcode %d, opcode %d", _cmdCompleteOpcode, opcode);
   sio::Println(buf);
-  while(!(USART0.STATUS & USART_RXCIF_bm)) {
-    ;
-  }
+  // while(!(USART0.STATUS & USART_RXCIF_bm)) {
+  //   ;
+  // }
   sio::Println("[LOG] Before sendCommand() loop");
-  while (_cmdCompleteOpcode != opcode && _msCounter < (1000)) {
+  while (_cmdCompleteOpcode != opcode && _msCounter < (5000)) {
     _delay_ms(1);
     if (_msCounter % 100 == 0) {
       sprintf(buf, "_cmdCompleteOpcode %d, opcode %d", _cmdCompleteOpcode, opcode);

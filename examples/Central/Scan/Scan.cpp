@@ -84,6 +84,30 @@
 //   CPUINT_CTRLA |= CPUINT_IVSEL_bm;
 //}
 
+ISR(USART0_RXC_vect)
+{
+  sio::Println("RX");
+  // Serial2._rx_complete_irq();
+}
+
+ISR(USART3_RXC_vect)
+{
+  sio::Println("3RX");
+  // Serial2._rx_complete_irq();
+}
+
+ISR(PORTD_PORT_vect) {
+    sio::Println("ISR working...\n");
+    // if ((!(PORTD.IN & PIN0_bm))) {
+    //     PORTA.OUTSET = PIN1_bm;
+    // } else {
+    //     PORTA.OUTCLR = PIN1_bm;
+    // }
+    // flag = 1;
+    PORTD_INTFLAGS = 1;
+}
+
+
 int main() {
   // arduino_clock_fix();
   // uart_init();
@@ -94,14 +118,25 @@ int main() {
   sio::Println("Starting up2!!!!");
   sio::Println("Starting up3!!!!");
 
-  CPU_CCP = CCP_IOREG_gc;
-  CPUINT_CTRLA |= CPUINT_IVSEL_bm;
+  // CPU_CCP = CCP_IOREG_gc;
+  // CPUINT_CTRLA |= CPUINT_IVSEL_bm;
 
   // begin initialization
   if (!BLE.begin()) {
     sio::Println("starting BLE failed!");
 
-    while (1);
+
+    // Configure a test ISR
+    // Enable and setup input pins for Buttons
+    PORTD.DIRCLR = (PIN0_bm | PIN1_bm | PIN2_bm);
+    PORTD.PIN0CTRL = PORT_PULLUPEN_bm;
+    PORTD.PIN0CTRL |= PORT_ISC_BOTHEDGES_gc;
+
+    //USART3.CTRLA |= (USART_RXCIE_bm | USART_DREIE_bm);
+
+    // Enable global interrupts
+    sei();
+    // while (1);
   }
 
   sio::Println("BLE Central scan");
