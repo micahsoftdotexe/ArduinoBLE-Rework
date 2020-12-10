@@ -204,11 +204,9 @@ void UartClass::begin(unsigned long baud, uint16_t config)
     PORTA.OUTSET = PIN4_bm;
     PORTA.DIRSET = PIN4_bm;
 
-    sei();
-    
-
     // Restore SREG content
     SREG = oldSREG;
+
     sio::Println("[LOG] _uart->begin() -- end");
     char buff[64];
     sprintf(buff,"CTRLA: 0x%02x", USART0_CTRLA);
@@ -219,6 +217,8 @@ void UartClass::begin(unsigned long baud, uint16_t config)
     sio::Println(buff);
     sprintf(buff,"BAUD: 0x%02x", USART0_BAUD);
     sio::Println(buff);
+
+    sei();
 
 }
 
@@ -311,7 +311,9 @@ void UartClass::flush()
 
 size_t UartClass::write(uint8_t c)
 {
-    sio::Println("[LOG] Writing");
+    char buf[32];
+    sprintf(buf, "[LOG] Writing %d", c);
+    sio::Println(buf);
     _written = true;
 
     // If the buffer and the data register is empty, just write the byte

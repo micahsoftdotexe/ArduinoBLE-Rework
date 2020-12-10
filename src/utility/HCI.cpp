@@ -504,6 +504,8 @@ int HCIClass::sendCommand(uint16_t opcode, uint8_t plen, void* parameters)
   // while(!(USART0.STATUS & USART_RXCIF_bm)) {
   //   ;
   // }
+  sprintf(buf, "[LOG] SREG %02x", SREG);
+  sio::Println(buf);
   sio::Println("[LOG] Before sendCommand() loop");
   while (_cmdCompleteOpcode != opcode && _msCounter < (5000)) {
     _delay_ms(1);

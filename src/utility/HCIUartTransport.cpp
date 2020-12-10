@@ -101,7 +101,11 @@ int HCIUartTransportClass::peek()
 
 int HCIUartTransportClass::read()
 {
-  return _uart->read();
+  int temp = _uart->read();
+  char buf[32];
+  sprintf(buf, "Read Data: %d", )
+
+  return 
 }
 
 size_t HCIUartTransportClass::write(const uint8_t* data, size_t length)

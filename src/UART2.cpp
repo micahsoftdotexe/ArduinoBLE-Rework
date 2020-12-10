@@ -40,11 +40,11 @@
 
 #if defined(HWSERIAL2_RXC_VECTOR)
 // ISR(HWSERIAL2_RXC_VECTOR)
-// ISR(USART0_RXC_vect)
-// {
-//   sio::Println("RX");
-//   Serial2._rx_complete_irq();
-// }
+ISR(USART0_RXC_vect)
+{
+  sio::Println("RX");
+  Serial2._rx_complete_irq();
+}
 #else
 #error "Don't know what the Data Received interrupt vector is called for Serial2"
 #endif

@@ -84,11 +84,11 @@
 //   CPUINT_CTRLA |= CPUINT_IVSEL_bm;
 //}
 
-ISR(USART0_RXC_vect)
-{
-  sio::Println("RX");
-  // Serial2._rx_complete_irq();
-}
+// ISR(USART0_RXC_vect)
+// {
+//   sio::Println("RX");
+//   // Serial2._rx_complete_irq();
+// }
 
 ISR(USART3_RXC_vect)
 {
