@@ -103,9 +103,9 @@ int HCIUartTransportClass::read()
 {
   int temp = _uart->read();
   char buf[32];
-  sprintf(buf, "Read Data: %d", )
+  //sprintf(buf, "Read Data: %d", )
 
-  return 
+  return temp;
 }
 
 size_t HCIUartTransportClass::write(const uint8_t* data, size_t length)

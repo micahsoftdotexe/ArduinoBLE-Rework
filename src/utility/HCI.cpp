@@ -105,7 +105,7 @@ void HCIClass::poll(unsigned long timeout)
 {
 #ifdef ARDUINO_AVR_UNO_WIFI_REV2
   // digitalWrite(NINA_RTS, LOW);
-  PORTA.DIRCLR = PIN6_bm;
+  PORTA.OUTCLR = PIN6_bm;
 #endif
 
   if (timeout) {
@@ -507,7 +507,7 @@ int HCIClass::sendCommand(uint16_t opcode, uint8_t plen, void* parameters)
   sprintf(buf, "[LOG] SREG %02x", SREG);
   sio::Println(buf);
   sio::Println("[LOG] Before sendCommand() loop");
-  while (_cmdCompleteOpcode != opcode && _msCounter < (5000)) {
+  while (_cmdCompleteOpcode != opcode && _msCounter < (10000)) { //5000
     _delay_ms(1);
     if (_msCounter % 100 == 0) {
       sprintf(buf, "_cmdCompleteOpcode %d, opcode %d", _cmdCompleteOpcode, opcode);
