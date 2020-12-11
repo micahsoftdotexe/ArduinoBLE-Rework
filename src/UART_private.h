@@ -52,7 +52,8 @@ UartClass::UartClass(
 void UartClass::_rx_complete_irq(void)
 {
   //if (bit_is_clear(*_rxdatah, USART_PERR_bp)) {
-  if (!(((*_hwserial_module).RXDATAH) & USART_PERR_bm)) {
+  // if (!(((*_hwserial_module).RXDATAH) & USART_PERR_bm)) {
+  if(1){
     // No Parity error, read byte and store it in the buffer if there is
     // room
     unsigned char c = (*_hwserial_module).RXDATAL;

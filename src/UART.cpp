@@ -230,13 +230,13 @@ void UartClass::end()
 
     // Disable receiver and transmitter as well as the RX complete and
     // data register empty interrupts.
-    USART0.CTRLB &= ~(USART_RXEN_bm | USART_TXEN_bm);
-    USART0.CTRLA &= ~(USART_RXCIE_bm | USART_DREIE_bm);
+    // USART0.CTRLB &= ~(USART_RXEN_bm | USART_TXEN_bm);
+    // USART0.CTRLA &= ~(USART_RXCIE_bm | USART_DREIE_bm);
 
     // clear any received data
-    _rx_buffer_head = _rx_buffer_tail;
+    // _rx_buffer_head = _rx_buffer_tail;
 
-    _written = false;
+    // _written = false;
 }
 
 int UartClass::available(void)

@@ -128,15 +128,15 @@ int main() {
 
     // Configure a test ISR
     // Enable and setup input pins for Buttons
-    PORTD.DIRCLR = (PIN0_bm | PIN1_bm | PIN2_bm);
-    PORTD.PIN0CTRL = PORT_PULLUPEN_bm;
-    PORTD.PIN0CTRL |= PORT_ISC_BOTHEDGES_gc;
+    // PORTD.DIRCLR = (PIN0_bm | PIN1_bm | PIN2_bm);
+    // PORTD.PIN0CTRL = PORT_PULLUPEN_bm;
+    // PORTD.PIN0CTRL |= PORT_ISC_BOTHEDGES_gc;
 
     //USART3.CTRLA |= (USART_RXCIE_bm | USART_DREIE_bm);
 
     // Enable global interrupts
-    sei();
-    // while (1);
+    // sei();
+    while (1);
   }
 
   sio::Println("BLE Central scan");

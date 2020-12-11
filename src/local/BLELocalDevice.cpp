@@ -47,7 +47,7 @@ BLELocalDevice::~BLELocalDevice()
 
 int BLELocalDevice::begin()
 {
-  //sio::Println("It has begun!!!!");
+  sio::Println("It has begun!!!!");
 #if defined(ARDUINO_SAMD_MKRWIFI1010) || defined(ARDUINO_AVR_UNO_WIFI_REV2) || defined(ARDUINO_SAMD_NANO_33_IOT)
   // reset the NINA in BLE mode
   // pinMode(SPIWIFI_SS, OUTPUT);

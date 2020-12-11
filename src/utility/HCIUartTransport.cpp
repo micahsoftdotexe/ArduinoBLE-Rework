@@ -103,7 +103,8 @@ int HCIUartTransportClass::read()
 {
   int temp = _uart->read();
   char buf[32];
-  //sprintf(buf, "Read Data: %d", )
+  sprintf(buf, "Read Data: %d",temp);
+  sio::Println(buf);
 
   return temp;
 }
@@ -115,8 +116,22 @@ size_t HCIUartTransportClass::write(const uint8_t* data, size_t length)
   // while (digitalRead(NINA_CTS) == HIGH);
   while (PORTF_IN & PIN3_bm);
 #endif
-
   sio::Println("[LOG] HCIUartTransportClass::write");
+  //sio::Println("[LOG] Before _uart->begin()");
+  char buf[32];
+  // sprintf(buf, "ClkCTRL_MCLKCTRLB: %d", CLKCTRL_MCLKCTRLB);
+  // sio::Println(buf);
+  // sprintf(buf, "CTRLA usart: %d", USART0_CTRLA);
+  // sio::Println(buf);
+  // sprintf(buf, "Usart CTRLB: %d", USART0_CTRLB);
+  // sio::Println(buf);
+  // sprintf(buf, "USART0 STATUS: %d", USART0_STATUS);
+  // sio::Println(buf);
+  // sprintf(buf, "SREG: %d", SREG);
+  // sio::Println(buf);
+  // //sio::Println("[LOG] HCIUartTransportClass::write");
+  // sprintf(buf, "CPUINTERRUPTS: %d", CPUINT_CTRLA);
+  // sio::Println(buf);
   size_t result = _uart->write(data, length);
 
   _uart->flush();

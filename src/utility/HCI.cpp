@@ -114,9 +114,9 @@ void HCIClass::poll(unsigned long timeout)
 
   while (HCITransport.available()) {
 
-    char buf[32];
-    sprintf(buf, "[LOG] avail: %d", HCITransport.available());
-    sio::Println(buf);
+    // char buf[32];
+    // sprintf(buf, "[LOG] avail: %d", HCITransport.available());
+    // sio::Println(buf);
     byte b = HCITransport.read();
 
     _recvBuffer[_recvIndex++] = b;
@@ -498,7 +498,7 @@ int HCIClass::sendCommand(uint16_t opcode, uint8_t plen, void* parameters)
   _cmdCompleteStatus = -1;
 
   uint16_t _loopCounter=0;
-  uint16_t _msCounter=0;
+  uint32_t _msCounter=0;
   sprintf(buf, "_cmdCompleteOpcode %d, opcode %d", _cmdCompleteOpcode, opcode);
   sio::Println(buf);
   // while(!(USART0.STATUS & USART_RXCIF_bm)) {
@@ -507,12 +507,23 @@ int HCIClass::sendCommand(uint16_t opcode, uint8_t plen, void* parameters)
   sprintf(buf, "[LOG] SREG %02x", SREG);
   sio::Println(buf);
   sio::Println("[LOG] Before sendCommand() loop");
-  while (_cmdCompleteOpcode != opcode && _msCounter < (10000)) { //5000
-    _delay_ms(1);
-    if (_msCounter % 100 == 0) {
-      sprintf(buf, "_cmdCompleteOpcode %d, opcode %d", _cmdCompleteOpcode, opcode);
-      sio::Println(buf);
-    }
+  while ((_cmdCompleteOpcode != opcode) && (_msCounter < 500000)) {
+    //_delay_us(10);
+    // if (_msCounter % 10000 == 0) {
+    //   sprintf(buf, "ClkCTRL_MCLKCTRLB: %d", CLKCTRL_MCLKCTRLB);
+    //   sio::Println(buf);
+    //   sprintf(buf, "CTRLA usart: %d", USART0_CTRLA);
+    //   sio::Println(buf);
+    //   sprintf(buf, "Usart CTRLB: %d", USART0_CTRLB);
+    //   sio::Println(buf);
+    //   sprintf(buf, "USART0 STATUS: %d", USART0_STATUS);
+    //   sio::Println(buf);
+    //   sprintf(buf, "SREG: %d", SREG);
+    //   sio::Println(buf);
+    //   //sio::Println("[LOG] HCIUartTransportClass::write");
+    //   sprintf(buf, "CPUINTERRUPTS: %d", CPUINT_CTRLA);
+    //   sio::Println(buf);
+    // }
     _msCounter++;
     // if (_loopCounter == 64) {  // 50 cycles - 1/16000000 -> 6.25e-08 * 50 = 3.1249999999999997e ////***//// ->     1/((1/16000000) * 250 * 1000) = 64
     
