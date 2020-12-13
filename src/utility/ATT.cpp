@@ -31,6 +31,7 @@
 #include "remote/BLERemoteService.h"
 
 #include "BLEProperty.h"
+#include <util/delay.h>
 
 #include "ATT.h"
 
@@ -116,8 +117,12 @@ bool ATTClass::connect(uint8_t peerBdaddrType, uint8_t peerBdaddr[6])
 
   bool isConnected = false;
 
-  for (unsigned long start = millis(); (millis() - start) < _timeout;) {
+  uint32_t counter = 0;
+  while (counter < _timeout) {
     HCI.poll();
+
+    counter++;
+    _delay_ms(1);
 
     isConnected = connected(peerBdaddrType, peerBdaddr);
 
@@ -1630,8 +1635,12 @@ int ATTClass::sendReq(uint16_t connectionHandle, void* requestBuffer, int reques
     return 0;
   } 
 
-  for (unsigned long start = millis(); (millis() - start) < _timeout;) {
+  uint32_t counter = 0;
+  while (counter < _timeout) {
     HCI.poll();
+
+    counter++;
+    _delay_ms(1);
 
     if (!connected(connectionHandle)) {
       break;

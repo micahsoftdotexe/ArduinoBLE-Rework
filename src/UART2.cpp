@@ -42,7 +42,6 @@
 // ISR(HWSERIAL2_RXC_VECTOR)
 ISR(USART0_RXC_vect)
 {
-  // sio::Println("RX");
   Serial2._rx_complete_irq();
 }
 #else
@@ -52,7 +51,6 @@ ISR(USART0_RXC_vect)
 #if defined(HWSERIAL2_DRE_VECTOR)
 ISR(HWSERIAL2_DRE_VECTOR)
 {
-  // sio::Println("TX");
   Serial2._tx_data_empty_irq();
 }
 #else

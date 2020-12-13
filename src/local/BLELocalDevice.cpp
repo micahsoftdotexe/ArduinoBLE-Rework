@@ -47,7 +47,7 @@ BLELocalDevice::~BLELocalDevice()
 
 int BLELocalDevice::begin()
 {
-  sio::Println("It has begun!!!!");
+  
 #if defined(ARDUINO_SAMD_MKRWIFI1010) || defined(ARDUINO_AVR_UNO_WIFI_REV2) || defined(ARDUINO_SAMD_NANO_33_IOT)
   // reset the NINA in BLE mode
   // pinMode(SPIWIFI_SS, OUTPUT);
@@ -99,27 +99,20 @@ int BLELocalDevice::begin()
   PORTF.DIRCLR = PIN3_bm;
 #endif
 
-  sio::Println("[LOG] Before HCI.begin()");
+  
   if (!HCI.begin()) {
-    sio::Println("[LOG] After HCI.begin() --- end()");
     end();
     return 0;
   }
-  sio::Println("[LOG] After HCI.begin()");
 
   _delay_ms(100);
 
   uint16_t val = HCI.reset();
   if (val != 0) {
-    char buf[32];
-    sprintf(buf, "[LOG] val: %d", val);
-    sio::Println(buf);
-    sio::Println("[LOG] After HCI.reset() --- end()"); 
     end();
 
     return 0;
   }
-  sio::Println("[LOG] After HCI.reset()");
 
   uint8_t hciVer;
   uint16_t hciRev;
@@ -146,7 +139,6 @@ int BLELocalDevice::begin()
   }
 
   GATT.begin();
-  sio::Println("[LOG] After GATT.begin()");
 
   return 1;
 }

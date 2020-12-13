@@ -145,10 +145,6 @@ void UartClass::begin(unsigned long baud, uint16_t config)
     // baud = 119600;
     // Check if baud_setting is correct or not....
 
-    char buf[64];
-    sprintf(buf, "[LOG] baud: %ld config 0x%04x", baud, config);
-    sio::Println(buf);
-    sio::Println("[LOG] _uart->begin() -- start");
     // Make sure no transmissions are ongoing and USART is disabled in case begin() is called by accident
     // without first calling end()
     if(_written) {
@@ -158,9 +154,7 @@ void UartClass::begin(unsigned long baud, uint16_t config)
     // Setup port mux
     // PORTMUX.USARTROUTEA |= _uart_mux;
     PORTMUX_USARTROUTEA |= PORTMUX_USART0_ALT1_gc;   // Make USART0 use alt pins PA[5:4]
-    sprintf(buf, "[LOG] Portmux USARTROUTEA: 0x%02x", PORTMUX_USARTROUTEA);
-    sio::Println(buf);
-
+   
     int32_t baud_setting = 0;
 
     //Make sure global interrupts are disabled during initialization
@@ -173,12 +167,9 @@ void UartClass::begin(unsigned long baud, uint16_t config)
     USART0.CTRLB |= USART_RXMODE_NORMAL_gc;
 
     _written = false;
-    sio::Println("[LOG] _uart->begin() -- middle");
+    
     int8_t sigrow_val = SIGROW.OSC16ERR5V;
     baud_setting += (baud_setting * sigrow_val) / 1024;
-    char buffer[64];
-    // sprintf(buffer,"baud rate: %d", baud_setting);
-    // sio::Println(buffer);
     // assign the baud_setting, a.k.a. BAUD (USART Baud Rate Register)
     USART0.BAUD = (int16_t) baud_setting;
 
@@ -207,24 +198,12 @@ void UartClass::begin(unsigned long baud, uint16_t config)
     // Restore SREG content
     SREG = oldSREG;
 
-    sio::Println("[LOG] _uart->begin() -- end");
-    char buff[64];
-    sprintf(buff,"CTRLA: 0x%02x", USART0_CTRLA);
-    sio::Println(buff);
-    sprintf(buff,"CTRLB: 0x%02x", USART0_CTRLB);
-    sio::Println(buff);
-    sprintf(buff,"CTRLC: 0x%02x", USART0_CTRLC);
-    sio::Println(buff);
-    sprintf(buff,"BAUD: 0x%02x", USART0_BAUD);
-    sio::Println(buff);
-
     sei();
 
 }
 
 void UartClass::end()
 {
-    sio::Println("[LOG] UartClass::end()");
     // wait for transmission of outgoing data
     flush();
 
@@ -311,9 +290,6 @@ void UartClass::flush()
 
 size_t UartClass::write(uint8_t c)
 {
-    char buf[32];
-    sprintf(buf, "[LOG] Writing %d", c);
-    sio::Println(buf);
     _written = true;
 
     // If the buffer and the data register is empty, just write the byte

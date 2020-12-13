@@ -44,32 +44,10 @@ HCIUartTransportClass::HCIUartTransportClass(HardwareSerial& uart, unsigned long
 HCIUartTransportClass::~HCIUartTransportClass()
 {
 }
-// int HCIUartTransportClass::countms(){
-//   _delay_ms(1);
-//   ms++;
-//   return ms;
-// }
-// void HCIUartTransportClass::resetms(){
-//   ms = 0;
-// }
+
 int HCIUartTransportClass::begin()
 {
-  // sio::Println("[LOG] Before _uart->begin()");
-  // char buf[32];
-  // sprintf(buf, "Address: %d", (void*)_uart);
-  // sio::Println(buf);
-  // sio::Println("[LOG] after printing address");
   _uart->begin(_baudrate);
-  // sio::Println("[LOG] After _uart->begin()");
-  // char buf[64];
-  // sprintf(buf, "CTRLA = %04x", USART0_CTRLA);
-  // sio::Println(buf);
-  // sprintf(buf, "CTRLB = %04x", USART0_CTRLB);
-  // sio::Println(buf);
-  // sprintf(buf, "CTRLC = %04x", USART0_CTRLC);
-  // sio::Println(buf);
-  // sprintf(buf, "Baud: %04x", USART0_BAUD);
-  // sio::Println(buf);
 
   return 1;
 }
@@ -102,9 +80,6 @@ int HCIUartTransportClass::peek()
 int HCIUartTransportClass::read()
 {
   int temp = _uart->read();
-  char buf[32];
-  sprintf(buf, "Read Data: %d",temp);
-  sio::Println(buf);
 
   return temp;
 }
@@ -116,22 +91,6 @@ size_t HCIUartTransportClass::write(const uint8_t* data, size_t length)
   // while (digitalRead(NINA_CTS) == HIGH);
   while (PORTF_IN & PIN3_bm);
 #endif
-  sio::Println("[LOG] HCIUartTransportClass::write");
-  //sio::Println("[LOG] Before _uart->begin()");
-  char buf[32];
-  // sprintf(buf, "ClkCTRL_MCLKCTRLB: %d", CLKCTRL_MCLKCTRLB);
-  // sio::Println(buf);
-  // sprintf(buf, "CTRLA usart: %d", USART0_CTRLA);
-  // sio::Println(buf);
-  // sprintf(buf, "Usart CTRLB: %d", USART0_CTRLB);
-  // sio::Println(buf);
-  // sprintf(buf, "USART0 STATUS: %d", USART0_STATUS);
-  // sio::Println(buf);
-  // sprintf(buf, "SREG: %d", SREG);
-  // sio::Println(buf);
-  // //sio::Println("[LOG] HCIUartTransportClass::write");
-  // sprintf(buf, "CPUINTERRUPTS: %d", CPUINT_CTRLA);
-  // sio::Println(buf);
   size_t result = _uart->write(data, length);
 
   _uart->flush();

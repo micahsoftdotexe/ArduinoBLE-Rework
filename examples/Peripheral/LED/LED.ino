@@ -24,16 +24,17 @@ BLEByteCharacteristic switchCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1214
 
 const int ledPin = LED_BUILTIN; // pin to use for the LED
 
-void setup() {
+void main() {
   Serial.begin(9600);
   while (!Serial);
 
   // set LED pin to output mode
-  pinMode(ledPin, OUTPUT);
+  // pinMode(ledPin, OUTPUT);
+  PORTC_DIRSET = PIN5_bm;
 
   // begin initialization
   if (!BLE.begin()) {
-    Serial.println("starting BLE failed!");
+    sio::Println("starting BLE failed!");
 
     while (1);
   }
@@ -54,18 +55,18 @@ void setup() {
   // start advertising
   BLE.advertise();
 
-  Serial.println("BLE LED Peripheral");
-}
+  sio::Println("BLE LED Peripheral");
 
-void loop() {
+  while(1) {
+
   // listen for BLE peripherals to connect:
   BLEDevice central = BLE.central();
 
   // if a central is connected to peripheral:
   if (central) {
-    Serial.print("Connected to central: ");
+    sio::Print("Connected to central: ");
     // print the central's MAC address:
-    Serial.println(central.address());
+    sio::Println(central.address());
 
     // while the central is still connected to peripheral:
     while (central.connected()) {
@@ -73,17 +74,19 @@ void loop() {
       // use the value to control the LED:
       if (switchCharacteristic.written()) {
         if (switchCharacteristic.value()) {   // any value other than 0
-          Serial.println("LED on");
-          digitalWrite(ledPin, HIGH);         // will turn the LED on
+          sio::Println("LED on");
+          // digitalWrite(ledPin, HIGH);         // will turn the LED on
+          PORTC.OUTSET = PIN5_bm;
         } else {                              // a 0 value
-          Serial.println(F("LED off"));
-          digitalWrite(ledPin, LOW);          // will turn the LED off
+          sio::Println(F("LED off"));
+          // digitalWrite(ledPin, LOW);          // will turn the LED off
+          PORTC.OUTCLR = PIN5_bm;
         }
       }
     }
 
     // when the central disconnects, print it out:
-    Serial.print(F("Disconnected from central: "));
-    Serial.println(central.address());
+    sio::Print(F("Disconnected from central: "));
+    sio::Println(central.address());
   }
 }

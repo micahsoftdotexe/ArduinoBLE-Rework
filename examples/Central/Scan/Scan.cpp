@@ -27,115 +27,15 @@
 
 #include <ArduinoBLE.h>
 
-// Takes a null terminated string and sends via USART
-// void print(const char *message) {
-//     while( *message != 0) {
-//         while (!(USART3.STATUS & USART_DREIF_bm)) { // Transmit buffer is not empty - wait
-//             ; //spin
-//         }
-//         USART3_TXDATAL = *message;
-//         message++;
-//     }
-// }
-
-// void println(const char * message) {
-//     print(message);
-//     print("\n");
-// }
-
-// // Fills string buffer, ending with a 0, stops on \n or end of buffer
-// void GetSerialMsg(char * message, unsigned int buf_size) {
-//     unsigned char counter = 0;
-//     while (1) {
-//         while ( !(USART3.STATUS & USART_RXCIF_bm) )
-//         {
-//             ; //spin wait
-//         }
-//         message[counter] = USART3_RXDATAL;
-
-//         // char buf2[16];
-//         // sprintf(buf2, "%02d\n", message[counter]);
-//         // SendSerialMsg(buf2);
-
-//         counter++;
-
-//         if ((message[counter-1] == 4) || (counter >= (buf_size - 1)))
-//         {
-//             message[counter-1] = 0;
-//             message[counter] = 0;
-//             break;
-//         }
-//     }
-// }
-
-// void uart_init() {    
-//     arduino_clock_fix();
-//     PORTB.DIRSET = PIN4_bm;												
-//     PORTB.DIRCLR = PIN5_bm;
-//     PORTMUX_USARTROUTEA = PORTMUX_USART3_ALT1_gc;   // Make USART3 use alt pins PB[5:4]
-//     USART3_BAUD = 1111;                             // (16000000 * 64) / (16 * 9600) = 6666.66
-//     USART3_CTRLB = USART_TXEN_bm | USART_RXEN_bm; // Enable transmitter and 8 bit mode
-// }
-// void arduino_clock_fix(){
-//    CPU_CCP = CCP_IOREG_gc;
-//   CLKCTRL_MCLKCTRLB = 0;      // Back to 16MHz
-
-//   CPU_CCP = CCP_IOREG_gc;
-//   CPUINT_CTRLA |= CPUINT_IVSEL_bm;
-//}
-
-// ISR(USART0_RXC_vect)
-// {
-//   sio::Println("RX");
-//   // Serial2._rx_complete_irq();
-// }
-
-ISR(USART3_RXC_vect)
-{
-  sio::Println("3RX");
-  // Serial2._rx_complete_irq();
-}
-
-ISR(PORTD_PORT_vect) {
-    sio::Println("ISR working...\n");
-    // if ((!(PORTD.IN & PIN0_bm))) {
-    //     PORTA.OUTSET = PIN1_bm;
-    // } else {
-    //     PORTA.OUTCLR = PIN1_bm;
-    // }
-    // flag = 1;
-    PORTD_INTFLAGS = 1;
-}
-
 
 int main() {
-  // arduino_clock_fix();
-  // uart_init();
-  // sio serial = sio();
   sio::setup();
   
-  sio::Println("Starting up!!!!");
-  sio::Println("Starting up2!!!!");
-  sio::Println("Starting up3!!!!");
-
-  // CPU_CCP = CCP_IOREG_gc;
-  // CPUINT_CTRLA |= CPUINT_IVSEL_bm;
 
   // begin initialization
   if (!BLE.begin()) {
     sio::Println("starting BLE failed!");
 
-
-    // Configure a test ISR
-    // Enable and setup input pins for Buttons
-    // PORTD.DIRCLR = (PIN0_bm | PIN1_bm | PIN2_bm);
-    // PORTD.PIN0CTRL = PORT_PULLUPEN_bm;
-    // PORTD.PIN0CTRL |= PORT_ISC_BOTHEDGES_gc;
-
-    //USART3.CTRLA |= (USART_RXCIE_bm | USART_DREIE_bm);
-
-    // Enable global interrupts
-    // sei();
     while (1);
   }
 
@@ -177,7 +77,7 @@ int main() {
 
       // print the RSSI
       sio::Print("RSSI: ");
-      // println(peripheral.rssi().c_str());
+      
 
       sio::Println("");
     }
